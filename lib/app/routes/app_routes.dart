@@ -21,10 +21,13 @@ abstract class Routes {
   static const DETAIL_BASIC_SHOOTING = _Paths.DETAIL_BASIC_SHOOTING;
   static const DETAIL_BASIC_PENDINGINAN = _Paths.DETAIL_BASIC_PENDINGINAN;
   static const LATIHANN = _Paths.LATIHANN;
-   static const DETAIL_LATIHAN = _Paths.DETAIL_LATIHAN;
-  static const LOGIN= _Paths.LOGIN;
-   static const LOGINN= _Paths.LOGINN;
- 
+  static const DETAIL_LATIHAN = _Paths.DETAIL_LATIHAN;
+  static const LOGIN = _Paths.LOGIN;
+  static const LOGINN = _Paths.LOGINN;
+  static const OTP = _Paths.OTP;
+  static const USER = _Paths.USER;
+  static const HISTORY = _Paths.HISTORY;
+  static const EDIT_PROFILE = _Paths.EDIT_PROFILE;
 }
 
 abstract class _Paths {
@@ -49,6 +52,10 @@ abstract class _Paths {
   static const LATIHANN = '/latihann';
   static const DETAIL_LATIHAN = '/detail-latihan';
   static const LOGIN = '/login';
-   static const LOGINN = '/loginn';
-    static const REGISTER = '/register';
+  static const LOGINN = '/loginn';
+  static const REGISTER = '/register';
+  static const OTP = '/otp';
+  static const USER = '/user';
+  static const HISTORY = '/history';
+  static const EDIT_PROFILE = '/edit-profile';
 }

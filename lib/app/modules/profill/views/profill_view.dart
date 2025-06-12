@@ -16,10 +16,10 @@ class ProfillView extends GetView<ProfillController> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
-                children: const [
-                  Icon(Icons.arrow_back_ios, color: Colors.black),
-                  SizedBox(width: 8),
-                  Text(
+                children: [
+                  
+                  const SizedBox(width: 8),
+                  const Text(
                     "Profile",
                     style: TextStyle(
                       fontSize: 20,
@@ -29,107 +29,50 @@ class ProfillView extends GetView<ProfillController> {
                 ],
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
 
             // Profile Picture
             Center(
-              child: Stack(
-                alignment: Alignment.bottomRight,
-                children: [
-                  const CircleAvatar(
-                    radius: 50,
-                    backgroundImage: AssetImage('assets/images/profill.jpg'), 
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    padding: const EdgeInsets.all(4),
-                    child: const Icon(
-                      Icons.camera_alt,
-                      size: 20,
-                      color: Colors.blue,
-                    ),
-                  ),
-                ],
+              child: const CircleAvatar(
+                radius: 50,
+                backgroundImage: AssetImage('assets/images/profill.jpg'),
               ),
             ),
             const SizedBox(height: 12),
 
             // Name and Email
             const Text(
-              "Michael ",
+              "Michael",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const Text(
               "michael@email.com",
               style: TextStyle(color: Colors.grey),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 32),
 
-            // Name TextField
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: TextField(
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.person_outline),
-                  hintText: "Name",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Password TextField
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  hintText: "Password",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Edit & Logout Row
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      // Edit action
-                    },
-                    child: const Text("Edit", style: TextStyle(color: Colors.blue)),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      // Logout action
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    icon: const Icon(Icons.logout),
-                    label: const Text("Logout", style: TextStyle(color: Colors.white),),
-                  )
-                ],
-              ),
-            )
+            // Menu Items
+            _buildMenuItem(Icons.edit, "Edit Profile", () {
+              Get.toNamed('/edit-profile');
+            }),
+            _buildMenuItem(Icons.history, "History", () {
+               Get.toNamed('/history');
+            }),
+            _buildMenuItem(Icons.settings, "Setting", () {
+              // Navigasi ke setting
+            }),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildMenuItem(IconData icon, String title, VoidCallback onTap) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.blue),
+      title: Text(title, style: const TextStyle(fontSize: 16)),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      onTap: onTap,
     );
   }
 }
