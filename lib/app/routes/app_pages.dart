@@ -50,6 +50,10 @@ import '../modules/otp/bindings/otp_binding.dart';
 import '../modules/otp/views/otp_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
+import '../modules/rekam/bindings/rekam_binding.dart';
+import '../modules/rekam/views/rekam_view.dart';
+import '../modules/streamlite/bindings/streamlite_binding.dart';
+import '../modules/streamlite/views/streamlite_view.dart';
 import '../modules/user/bindings/user_binding.dart';
 import '../modules/user/views/user_view.dart';
 
@@ -188,8 +192,18 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.EDIT_PROFILE,
-      page: () =>  EditProfileView(),
+      page: () => EditProfileView(),
       binding: EditProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.STREAMLITE,
+      page: () => const StreamliteView(),
+      binding: StreamliteBinding(),
+    ),
+    GetPage(
+      name: _Paths.REKAM,
+      page: () => const RekamView(),
+      binding: RekamBinding(),
     ),
   ];
 }

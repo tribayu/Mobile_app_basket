@@ -125,7 +125,7 @@ class LoginnView extends GetView<LoginnController> {
                         ),
                       ),
                       child: const Text(
-                        "Masuk",
+                        "Login",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,

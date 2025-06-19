@@ -11,7 +11,7 @@ class LoginnController extends GetxController {
   final String baseUrl = 'http://192.168.34.102:5000';
   final String apiKey = 'api-key-1234';
 
-    final box = GetStorage();
+  final box = GetStorage();
 
   void login() async {
     final email = emailController.text.trim();
@@ -25,7 +25,6 @@ class LoginnController extends GetxController {
     try {
       String basicAuth = 'Basic ${base64Encode(utf8.encode('$email:$password'))}';
 
-
       final response = await http.post(
         Uri.parse('$baseUrl/login'),
         headers: {
@@ -37,26 +36,28 @@ class LoginnController extends GetxController {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-          List<dynamic> history = box.read<List>('history') ?? [];
+        // Simpan history per user
+        Map<String, dynamic> allHistory = box.read('history') ?? {};
+        List<dynamic> userHistory = List.from(allHistory[email] ?? []);
 
-         final newEntry = {
-           'email': email,
-           'timestamp': DateTime.now().toIso8601String(),
-          };
+        userHistory.add({
+          'email': email,
+          'timestamp': DateTime.now().toIso8601String(),
+        });
 
-           history.add(newEntry);
-           box.write('history', history);
+        allHistory[email] = userHistory;
+        box.write('history', allHistory);
 
-          
-           box.write('user', {
-            'email': email,
-            'username': email.split('@')[0], // default username dari email
-            'password': password,
-          });
-           Get.snackbar('Berhasil', 'Login berhasil');
-           Get.offAllNamed('/home');
+        // Simpan user login
+        box.write('user', {
+          'email': email,
+          'username': email.split('@')[0],
+          'password': password,
+        });
+
+        Get.snackbar('Berhasil', 'Login berhasil');
+        Get.offAllNamed('/home');
       } else if (response.statusCode == 202) {
-        // Contoh backend mengirim status 202 jika butuh OTP verifikasi
         goToOtp(email);
       } else {
         Get.snackbar('Gagal', data['pesan'] ?? 'Login gagal');
@@ -69,7 +70,7 @@ class LoginnController extends GetxController {
 
   void goToOtp(String email) {
     Get.toNamed('/otp', arguments: {'email': email});
-    Get.delete<LoginnController>(); // hapus controller agar tidak terjadi penggunaan controller setelah dispose
+    Get.delete<LoginnController>();
   }
 
   @override

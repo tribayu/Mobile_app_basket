@@ -35,18 +35,18 @@ class ProfillView extends GetView<ProfillController> {
             Center(
               child: const CircleAvatar(
                 radius: 50,
-                backgroundImage: AssetImage('assets/images/profill.jpg'),
+                backgroundColor: Colors.white,
               ),
             ),
             const SizedBox(height: 12),
 
             // Name and Email
             const Text(
-              "Michael",
+              "Byq",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const Text(
-              "michael@email.com",
+              "byq.idn@email.com",
               style: TextStyle(color: Colors.grey),
             ),
             const SizedBox(height: 32),
@@ -55,7 +55,7 @@ class ProfillView extends GetView<ProfillController> {
             _buildMenuItem(Icons.edit, "Edit Profile", () {
               Get.toNamed('/edit-profile');
             }),
-            _buildMenuItem(Icons.history, "History", () {
+            _buildMenuItem(Icons.history, "aktivitas akun", () {
                Get.toNamed('/history');
             }),
             _buildMenuItem(Icons.settings, "Setting", () {

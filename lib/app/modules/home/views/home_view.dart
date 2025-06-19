@@ -11,7 +11,7 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(LatihannController()); // pastikan controller tersedia
+    Get.put(LatihannController()); 
 
     final pages = [
       const _HomePage(),
@@ -77,7 +77,7 @@ class _HomePage extends StatelessWidget {
               children: const [
                 Text("Selamat Datang,", style: TextStyle(color: Colors.white)),
                 Text(
-                  "Michael",
+                  "Byq",
                   style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
                 ),
               ],

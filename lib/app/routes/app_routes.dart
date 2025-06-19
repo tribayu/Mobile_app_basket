@@ -28,6 +28,8 @@ abstract class Routes {
   static const USER = _Paths.USER;
   static const HISTORY = _Paths.HISTORY;
   static const EDIT_PROFILE = _Paths.EDIT_PROFILE;
+  static const STREAMLITE = _Paths.STREAMLITE;
+  static const REKAM = _Paths.REKAM;
 }
 
 abstract class _Paths {
@@ -58,4 +60,6 @@ abstract class _Paths {
   static const USER = '/user';
   static const HISTORY = '/history';
   static const EDIT_PROFILE = '/edit-profile';
+  static const STREAMLITE = '/streamlite';
+  static const REKAM = '/rekam';
 }
