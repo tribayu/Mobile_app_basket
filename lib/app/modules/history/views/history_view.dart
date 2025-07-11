@@ -12,29 +12,18 @@ class HistoryView extends StatefulWidget {
 
 class _HistoryViewState extends State<HistoryView> {
   final box = GetStorage();
-  List<dynamic> userHistory = [];
-  String? currentUserEmail;
+  List<dynamic> history = [];
 
   @override
   void initState() {
     super.initState();
-    final currentUser = box.read<Map>('user');
-    final allHistory = box.read<Map>('history') ?? {};
-
-    if (currentUser != null) {
-      currentUserEmail = currentUser['email'];
-      userHistory = List.from(allHistory[currentUserEmail] ?? []);
-    }
+    history = box.read<List>('history') ?? [];
   }
 
   void deleteHistory(int index) {
-    if (currentUserEmail == null) return;
-
     setState(() {
-      userHistory.removeAt(index);
-      final allHistory = box.read<Map>('history') ?? {};
-      allHistory[currentUserEmail] = userHistory;
-      box.write('history', allHistory);
+      history.removeAt(index);
+      box.write('history', history);
     });
 
     Get.snackbar('Deleted', 'History berhasil dihapus',
@@ -68,12 +57,12 @@ class _HistoryViewState extends State<HistoryView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Login History")),
-      body: userHistory.isEmpty
+      body: history.isEmpty
           ? const Center(child: Text("Belum ada history login."))
           : ListView.builder(
-              itemCount: userHistory.length,
+              itemCount: history.length,
               itemBuilder: (context, index) {
-                final item = userHistory[index];
+                final item = history[index];
                 final email = item['email'] ?? 'Unknown';
                 final timestamp = item['timestamp'] ?? '';
                 final dateTime = DateTime.tryParse(timestamp);

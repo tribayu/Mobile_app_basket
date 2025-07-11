@@ -1,17 +1,18 @@
-import 'package:basketball/app/modules/artikel/views/artikel_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import '../controllers/home_controller.dart';
 import '../../latihann/views/latihann_view.dart';
-import '../../profill/views/profill_view.dart';
 import '../../latihann/controllers/latihann_controller.dart';
+import '../../profill/views/profill_view.dart';
+import '../../artikel/views/artikel_view.dart';
 
 class HomeView extends GetView<HomeController> {
-  const HomeView({Key? key}) : super(key: key);
+  const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Get.put(LatihannController()); 
+    Get.put(LatihannController());
 
     final pages = [
       const _HomePage(),
@@ -27,9 +28,7 @@ class HomeView extends GetView<HomeController> {
       ),
       bottomNavigationBar: Obx(() => BottomNavigationBar(
             currentIndex: controller.currentIndex.value,
-            onTap: (index) {
-              controller.currentIndex.value = index;
-            },
+            onTap: controller.changeTab,
             selectedItemColor: Colors.blue,
             unselectedItemColor: Colors.grey,
             items: const [
@@ -48,16 +47,18 @@ class _HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final homeC = Get.find<HomeController>();
+
     return SingleChildScrollView(
       child: Column(
         children: [
           _buildHeader(),
           const SizedBox(height: 16),
-          _buildRecommendedTraining(),
+          _buildTrainingNavigation(),
           const SizedBox(height: 16),
-          _buildTrainingProgress(),
+          _buildTrainingProgress(homeC),
           const SizedBox(height: 16),
-          _buildCompletedTrainingBars(),
+          _buildCompletedTrainingBars(homeC),
           const SizedBox(height: 24),
         ],
       ),
@@ -65,6 +66,10 @@ class _HomePage extends StatelessWidget {
   }
 
   Widget _buildHeader() {
+    final box = GetStorage();
+    final user = box.read('user') ?? {};
+    final username = user['username'] ?? 'User';
+
     return Container(
       color: const Color(0xFF2771EA),
       padding: const EdgeInsets.all(16),
@@ -74,111 +79,63 @@ class _HomePage extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text("Selamat Datang,", style: TextStyle(color: Colors.white)),
+              children: [
+                const Text("Selamat Datang,", style: TextStyle(color: Colors.white)),
                 Text(
-                  "Byq",
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                  username,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                 ),
               ],
             ),
           ),
           const Icon(Icons.notifications_none, color: Colors.white),
           const SizedBox(width: 12),
-          const CircleAvatar(
-            backgroundColor: Colors.white,
-            radius: 16,
-          ),
+          const CircleAvatar(backgroundColor: Colors.white, radius: 16),
         ],
       ),
     );
   }
 
-  Widget _buildRecommendedTraining() {
-    final latihanController = Get.find<LatihannController>();
-    final List<Map<String, dynamic>> basicPreview = latihanController.basicLatihan;
-
+  Widget _buildTrainingNavigation() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Text("Recommended Training", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Text("Persiapan Fisik & Pemanasan", style: TextStyle(color: Colors.black54)),
+          child: Text("Kategori Latihan", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         ),
         const SizedBox(height: 12),
-        SizedBox(
-          height: 190,
-          child: ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            scrollDirection: Axis.horizontal,
-            itemCount: basicPreview.length > 4 ? 4 : basicPreview.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (_, i) {
-              final data = basicPreview[i];
-
-              return GestureDetector(
-                onTap: () {
-                  Get.toNamed('/detail-latihan', arguments: data);
-                },
-                child: Container(
-                  width: 180,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: const [
-                      BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(16),
-                          topRight: Radius.circular(16),
-                        ),
-                        child: Image.asset(
-                          data['image'] ?? '',
-                          height: 90,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Text(
-                          data['title'] ?? '',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Text(
-                          "${data['duration'] ?? ''}   ${data['category'] ?? ''}",
-                          style: const TextStyle(color: Colors.black54, fontSize: 12),
-                        ),
-                      ),
-                      const Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: LinearProgressIndicator(value: data['progress'] ?? 0.0),
-                      ),
-                    ],
-                  ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: _NavigationCard(
+                  icon: Icons.fitness_center,
+                  label: "Latihan Dasar",
+                  onTap: () => Get.toNamed('/latihann', arguments: 'Basic'),
                 ),
-              );
-            },
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _NavigationCard(
+                  icon: Icons.trending_up,
+                  label: "Latihan Menengah",
+                  onTap: () => Get.toNamed('/latihann', arguments: 'Intermediate'),
+                ),
+              ),
+            ],
           ),
         ),
       ],
     );
   }
 
-  Widget _buildTrainingProgress() {
+  Widget _buildTrainingProgress(HomeController homeC) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -191,47 +148,39 @@ class _HomePage extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
             ),
             padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    SizedBox(
-                      width: 120,
-                      height: 120,
-                      child: CircularProgressIndicator(
-                        value: 0.0,
-                        strokeWidth: 10,
-                        backgroundColor: Colors.grey.shade300,
-                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
-                      ),
+            child: Obx(() {
+              final value = homeC.totalProgress;
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  SizedBox(
+                    width: 120,
+                    height: 120,
+                    child: CircularProgressIndicator(
+                      value: value,
+                      strokeWidth: 10,
+                      backgroundColor: Colors.grey.shade300,
+                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
                     ),
-                    const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("0%", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                        Text("Complete", style: TextStyle(color: Colors.grey)),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    _StatusBox(icon: Icons.check_circle, label: 'Completed', value: '0'),
-                    _StatusBox(icon: Icons.timelapse, label: 'Pending', value: '0'),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("${(value * 100).toInt()}%",
+                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      const Text("Progress", style: TextStyle(color: Colors.grey)),
+                    ],
+                  ),
+                ],
+              );
+            }),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildCompletedTrainingBars() {
+  Widget _buildCompletedTrainingBars(HomeController homeC) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
@@ -242,12 +191,20 @@ class _HomePage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text("Completed Trainings", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            SizedBox(height: 16),
-            _ProgressItem(label: "Basics", icon: Icons.menu_book, progress: 0.0),
-            SizedBox(height: 8),
-            _ProgressItem(label: "Intermediate", icon: Icons.school, progress: 0.0),
+          children: [
+            const Text("Progress Latihan", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            const SizedBox(height: 16),
+            Obx(() => _ProgressItem(
+                  label: "${homeC.basicDone}/6",
+                  icon: Icons.fitness_center,
+                  progress: homeC.basicDone / 6,
+                )),
+            const SizedBox(height: 8),
+            Obx(() => _ProgressItem(
+                  label: "${homeC.intermediateDone}/5",
+                  icon: Icons.trending_up,
+                  progress: homeC.intermediateDone / 5,
+                )),
           ],
         ),
       ),
@@ -255,22 +212,35 @@ class _HomePage extends StatelessWidget {
   }
 }
 
-class _StatusBox extends StatelessWidget {
+class _NavigationCard extends StatelessWidget {
   final IconData icon;
   final String label;
-  final String value;
+  final VoidCallback onTap;
 
-  const _StatusBox({required this.icon, required this.label, required this.value});
+  const _NavigationCard({required this.icon, required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Icon(icon, color: Colors.blue),
-        const SizedBox(height: 4),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-        Text(label, style: const TextStyle(color: Colors.grey)),
-      ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 100,
+        decoration: BoxDecoration(
+          color: Colors.blue.shade50,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
+        ),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: Colors.blue, size: 32),
+              const SizedBox(height: 8),
+              Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -289,17 +259,19 @@ class _ProgressItem extends StatelessWidget {
         Icon(icon, color: Colors.blue),
         const SizedBox(width: 12),
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
-              const SizedBox(height: 4),
-              LinearProgressIndicator(value: progress),
-            ],
+          child: TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: progress),
+            duration: const Duration(seconds: 2),
+            builder: (context, value, child) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LinearProgressIndicator(value: value),
+              ],
+            ),
           ),
         ),
         const SizedBox(width: 12),
-        Text("${(progress * 100).toInt()}%", style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
       ],
     );
   }

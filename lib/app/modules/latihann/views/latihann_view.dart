@@ -7,6 +7,11 @@ class LatihannView extends GetView<LatihannController> {
 
   @override
   Widget build(BuildContext context) {
+    final args = Get.arguments;
+    if (args != null && (args == "basic" || args == "intermediate")) {
+      controller.setLevel(args.toString());
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       body: SafeArea(
@@ -32,167 +37,187 @@ class LatihannView extends GetView<LatihannController> {
               ),
             ),
 
-            // Filter Chips - Level
-            Obx(() => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Row(
-                    children: ["Basic", "Intermediate"].map((level) {
-                      final selected = controller.selectedLevel.value == level;
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: ChoiceChip(
-                          label: Text(level),
-                          selected: selected,
-                          selectedColor: Colors.blue,
-                          labelStyle: TextStyle(
-                            color: selected ? Colors.white : Colors.black,
-                          ),
-                          onSelected: (_) => controller.setLevel(level),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                )),
-
-            const SizedBox(height: 10),
-
-            // Filter Chips - Kategori (only for Basic)
+            // Segmented Tab
             Obx(() {
-              if (controller.selectedLevel.value == "Basic") {
-                return SizedBox(
-                  height: 40,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    children: [
-                      '',
-                      'Pemanasan',
-                      'Kontrol & Posisi dasar',
-                      'Dribbling',
-                      'Passing',
-                      'Shooting',
-                      'Pendinginan',
-                    ].map((cat) {
-                      final selected = controller.selectedCategory.value == cat;
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: ChoiceChip(
-                          label: Text(cat.isEmpty ? 'Semua' : cat),
-                          selected: selected,
-                          selectedColor: Colors.blue,
-                          labelStyle: TextStyle(
-                            color: selected ? Colors.white : Colors.black,
-                          ),
-                          onSelected: (_) => controller.setCategory(cat),
-                        ),
-                      );
-                    }).toList(),
+              final levels = ["Basic", "Intermediate"];
+              final selected = controller.selectedLevel.value;
+              final index = levels.indexOf(selected);
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: Container(
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(25),
                   ),
-                );
-              } else {
-                return const SizedBox.shrink();
-              }
+                  child: Stack(
+                    children: [
+                      AnimatedAlign(
+                        duration: const Duration(milliseconds: 300),
+                        alignment: index == 0 ? Alignment.centerLeft : Alignment.centerRight,
+                        curve: Curves.easeInOut,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                        ),
+                      ),
+                      Row(
+                        children: levels.map((level) {
+                          final isSelected = level == selected;
+                          return Expanded(
+                            child: GestureDetector(
+                              onTap: () => controller.setLevel(level),
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      level == "Basic" ? Icons.fitness_center : Icons.trending_up,
+                                      color: isSelected ? Colors.white : Colors.black87,
+                                      size: 18,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      level,
+                                      style: TextStyle(
+                                        color: isSelected ? Colors.white : Colors.black87,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             }),
 
             const SizedBox(height: 10),
 
-            // List Training Card
+            // Training Cards List
             Expanded(
               child: Obx(() => ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     itemCount: controller.filteredTrainings.length,
                     itemBuilder: (context, index) {
                       final t = controller.filteredTrainings[index];
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 6,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(16),
-                                    topRight: Radius.circular(16),
-                                  ),
-                                  child: Image.asset(
-                                    t['image'],
-                                    height: 160,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                  ),
+                      final status = t['status'];
+                      final locked = controller.isLocked(t);
+
+                      return GestureDetector(
+                        onTap: locked ? null : () => Get.toNamed('/detail-latihan/${t['id']}'),
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          decoration: BoxDecoration(
+                            color: locked ? Colors.grey.shade200 : Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              if (!locked)
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 2),
                                 ),
-                                Positioned(
-                                  top: 8,
-                                  right: 8,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.6),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Text(
-                                      t['duration'],
-                                      style: const TextStyle(color: Colors.white, fontSize: 12),
-                                    ),
-                                  ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              // Gambar
+                              ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  bottomLeft: Radius.circular(16),
                                 ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    t['title'],
-                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    t['label'],
-                                    style: const TextStyle(color: Colors.grey, fontSize: 12),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  LinearProgressIndicator(
-                                    value: t['progress'],
-                                    backgroundColor: Colors.grey[300],
-                                    color: Colors.blue,
-                                  ),
-                                  const SizedBox(height: 12),
-                                  SizedBox(
-                                    width: double.infinity,
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.blue,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(12),
+                                child: Stack(
+                                  children: [
+                                    Image.asset(
+                                      t['image'],
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) =>
+                                          const Icon(Icons.image_not_supported),
+                                    ),
+                                    if (locked)
+                                      Container(
+                                        width: 100,
+                                        height: 100,
+                                        color: Colors.grey.withOpacity(0.6),
+                                        child: const Icon(Icons.lock, color: Colors.white),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+
+                              // Informasi
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        t['judul'] ?? '',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                          color: locked ? Colors.grey : Colors.black,
                                         ),
                                       ),
-                                      onPressed: () {
-                                        Get.toNamed(
-                                          '/detail-latihan',
-                                          arguments: t,
-                                        );
-                                      },
-                                      child: const Text("Mulai"),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        t['level'] ?? '',
+                                        style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.access_time, size: 14, color: Colors.grey),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            t['duration'] ?? '',
+                                            style: const TextStyle(fontSize: 12),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                              // Tombol Status
+                              Padding(
+                                padding: const EdgeInsets.only(right: 12),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                                  decoration: BoxDecoration(
+                                    color: status == 'selesai' ? Colors.green.shade100 : Colors.grey.shade300,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Text(
+                                    status == 'selesai' ? 'Selesai' : 'Belum',
+                                    style: TextStyle(
+                                      color: status == 'selesai' ? Colors.green.shade800 : Colors.black87,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     },

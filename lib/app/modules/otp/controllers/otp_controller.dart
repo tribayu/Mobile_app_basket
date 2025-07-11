@@ -21,7 +21,7 @@ class OtpController extends GetxController {
 
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.34.102:5000/verify-otp'), 
+        Uri.parse('http://192.168.60.102:5000/verify-otp'), 
         headers: {'Content-Type': 'application/json',
                   'x-api-key': 'api-key-1234',
          },

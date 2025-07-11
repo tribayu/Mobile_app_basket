@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/detail_artikel/bindings/detail_artikel_binding.dart';
+import '../modules/detail_artikel/views/detail_artikel_view.dart';
 import '../modules/detail_basic_dribbling1/bindings/detail_basic_dribbling1_binding.dart';
 import '../modules/detail_basic_dribbling1/views/detail_basic_dribbling1_view.dart';
 import '../modules/detail_basic_dribbling2/bindings/detail_basic_dribbling2_binding.dart';
@@ -52,6 +54,8 @@ import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/rekam/bindings/rekam_binding.dart';
 import '../modules/rekam/views/rekam_view.dart';
+import '../modules/setting/bindings/setting_binding.dart';
+import '../modules/setting/views/setting_view.dart';
 import '../modules/streamlite/bindings/streamlite_binding.dart';
 import '../modules/streamlite/views/streamlite_view.dart';
 import '../modules/user/bindings/user_binding.dart';
@@ -171,7 +175,7 @@ class AppPages {
       binding: RegisterBinding(),
     ),
     GetPage(
-      name: _Paths.DETAIL_LATIHAN,
+      name: '/detail-latihan/:id',
       page: () => const DetailLatihanView(),
       binding: DetailLatihanBinding(),
     ),
@@ -204,6 +208,16 @@ class AppPages {
       name: _Paths.REKAM,
       page: () => const RekamView(),
       binding: RekamBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_ARTIKEL,
+      page: () => const DetailArtikelView(),
+      binding: DetailArtikelBinding(),
+    ),
+    GetPage(
+      name: _Paths.SETTING,
+      page: () => const SettingView(),
+      binding: SettingBinding(),
     ),
   ];
 }

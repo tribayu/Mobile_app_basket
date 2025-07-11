@@ -10,7 +10,7 @@ class RegisterController extends GetxController {
   var confirmPasswordController = TextEditingController();
 
  
-  final String baseUrl = 'http://192.168.34.102:5000';
+  final String baseUrl = 'http://192.168.60.102:5000';
   final String apiKey = 'api-key-1234';
 
   void register() async {

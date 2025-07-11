@@ -1,44 +1,26 @@
 import 'package:get/get.dart';
+import '../../latihann/controllers/latihann_controller.dart';
 
 class HomeController extends GetxController {
   var currentIndex = 0.obs;
 
-  final List<Map<String, String>> latihanList = [
-    {
-      "title": "Pemanasan",
-      "route": "/latihan-basic-pemanasan",
-      "image": "assets/images/jump.jpg",
-    },
-    {
-      "title": "Dribbling",
-      "route": "/latihan-basic-dribbling",
-      "image": "assets/images/jump.jpg",
-    },
-    {
-      "title": "Passing",
-      "route": "/latihan-basic-passing",
-      "image": "assets/images/jump.jpg",
-    },
-    {
-      "title": "Kontrol",
-      "route": "/latihan-basic-kontrol",
-      "image": "assets/images/jump.jpg",
-    },
-    {
-      "title": "Shooting",
-      "route": "/latihan-basic-shooting",
-      "image": "assets/images/jump.jpg",
-    },
-    {
-      "title": "Pendinginan",
-      "route": "/latihan-basic-pendinginan",
-      "image": "assets/images/jump.jpg",
-    },
-  ];
-  
-    void changeTab(int index) {
+  final LatihannController latihanC = Get.put(LatihannController());
+
+  void changeTab(int index) {
     currentIndex.value = index;
   }
 
+  double get totalProgress {
+    final selesai = latihanC.allTrainings.where((e) => e['status'] == 'selesai').length;
+    final total = latihanC.allTrainings.length;
+    return total == 0 ? 0 : selesai / total;
+  }
 
+  int get basicDone => latihanC.allTrainings
+      .where((e) => e['level'] == 'Basic' && e['status'] == 'selesai')
+      .length;
+
+  int get intermediateDone => latihanC.allTrainings
+      .where((e) => e['level'] == 'Intermediate' && e['status'] == 'selesai')
+      .length;
 }

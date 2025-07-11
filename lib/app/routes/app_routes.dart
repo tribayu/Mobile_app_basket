@@ -30,6 +30,8 @@ abstract class Routes {
   static const EDIT_PROFILE = _Paths.EDIT_PROFILE;
   static const STREAMLITE = _Paths.STREAMLITE;
   static const REKAM = _Paths.REKAM;
+  static const DETAIL_ARTIKEL = _Paths.DETAIL_ARTIKEL;
+  static const SETTING = _Paths.SETTING;
 }
 
 abstract class _Paths {
@@ -62,4 +64,6 @@ abstract class _Paths {
   static const EDIT_PROFILE = '/edit-profile';
   static const STREAMLITE = '/streamlite';
   static const REKAM = '/rekam';
+  static const DETAIL_ARTIKEL = '/detail-artikel';
+  static const SETTING = '/setting';
 }

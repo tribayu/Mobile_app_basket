@@ -5,179 +5,19 @@ class LatihannController extends GetxController {
   var selectedCategory = ''.obs;
   var searchKeyword = ''.obs;
 
-  final basicLatihan= [
-    // ===== Basic =====
-    {
-      'title': 'Jumping Jack & Jogging',
-      'image': 'assets/images/jump.jpg',
-      'duration': '5 min',
-      'label': 'Beginner Friendly',
-      'level': 'Basic',
-      'category': 'Pemanasan',
-      'progress': 0.0,
-      'description': 'Latihan dimulai dengan gerakan jumping jacks untuk meningkatkan detak jantung dan suhu tubuh, diikuti jogging ringan di tempat untuk mengaktifkan otot-otot utama. Gerakan ini sederhana namun efektif untuk memulai sesi dengan tubuh yang aktif dan siap..',
-      'goals': 'Meningkatkan  sirkulasi darah,aktifitas otot,mencegah cedera.',
-    },
-    {
-      'title': 'Dynamic Stretching',
-      'image': 'assets/images/dynamic.jpg',
-      'duration': '4 min',
-      'label': 'Basic Training',
-      'level': 'Basic',
-      'category': 'Pemanasan',
-      'progress': 0.0,
-      'description': 'Lakukan peregangan aktif seperti arm circles (putaran tangan), leg swings (ayunan kaki), lunges ringan, dan torso twist. Tidak seperti peregangan statis, dynamic stretching menggerakkan otot dalam rentang gerak alami.',
-      'goals':'Meningkatkan fleksibilitas dan mobilitas sendi sebelum latihan teknis',
-    },
-    {
-      'title': 'Triple Threat Position',
-      'image': 'assets/images/triple.jpg',
-      'duration': '2 min',
-      'label': 'Control & Position',
-      'level': 'Basic',
-      'category': 'Kontrol & Posisi dasar',
-      'progress': 0.0,
-      'description': 'Posisi "Triple Threat" adalah posisi dasar saat pemain memegang bola. Pemain berdiri sedikit menekuk lutut, satu kaki sedikit di depan, dan kedua tangan siap menggiring, mengoper, atau menembak. Ini adalah posisi strategis yang memberi banyak pilihan saat bermain.',
-      'goals':'Memberikan kesiapan taktis saat memegang bola.',
-    },
-    {
-      'title': 'Slide & Pivot',
-      'image': 'assets/images/pivot.jpg',
-      'duration': '2 min',
-      'label': 'Control & Movement',
-      'level': 'Basic',
-      'category': 'Kontrol & Posisi dasar',
-      'progress': 0.0,
-      'description': 'Latihan footwork meliputi defensive slide (langkah menyamping), pivot (memutar dengan satu kaki sebagai poros), dan quick steps. Fokus pada kontrol arah, koordinasi, dan stabilitas saat bergerak.',
-      'goals':'Mengembangkan keseimbangan, koordinasi, dan pergerakan defensif.',
-    },
-    {
-      'title': 'Dribble Statis',
-      'image': 'assets/images/drible.jpg',
-      'duration': '2 min',
-      'label': 'Control & Movement',
-      'level': 'Basic',
-      'category': 'Dribbling',
-      'progress': 0.0,
-      'description': 'Latihan dimulai dengan menggiring bola di tempat menggunakan tangan dominan, kemudian tangan non-dominan. Fokus pada kontrol bola, posisi tubuh (menunduk, lutut menekuk), dan pandangan ke depan.',
-      'goals':'Melatih kontrol bola dan membangun kekuatan tangan kiri-kanan secara seimbang.',
-    },
-    {
-      'title': 'Crossover',
-      'image': 'assets/images/ches.jpg',
-      'duration': '2 min',
-      'label': 'Control & Movement',
-      'level': 'Basic',
-      'category': 'Dribbling',
-      'progress': 0.0,
-      'description': 'Latihan crossover mengajarkan pemain memindahkan bola dari satu tangan ke tangan lainnya di depan tubuh saat berjalan. Fokus pada kontrol, timing, dan menjaga bola tetap rendah agar tidak mudah direbut lawan.',
-      'goals':'Meningkatkan kemampuan transisi tangan saat menggiring dan menghindari lawan.',
-    },
-    {
-      'title': 'Chest pass',
-      'image': 'assets/images/ches.jpg',
-      'duration': '2 min',
-      'label': 'Control & Movement',
-      'level': 'Basic',
-      'category': 'Passing',
-      'progress': 0.0,
-      'description': 'Posisi tubuh sejajar dengan tembok, pegang bola di depan dada dan lempar lurus ke arah dinding. Fokus pada posisi siku, gerakan pergelangan tangan, dan akurasi lemparan. Bisa dilakukan berulang.',
-      'goals':'Membangun kekuatan dan presisi operan lurus (chest pass).',
-    },
-    {
-      'title': 'Bounce pass',
-      'image': 'assets/images/bounce.jpg',
-      'duration': '2 min',
-      'label': 'Control & Movement',
-      'level': 'Basic',
-      'category': 'Passing',
-      'progress': 0.0,
-      'description': 'Latihan pantulan bola yang dilempar ke lantai agar memantul ke arah sasaran (misalnya titik X di dinding atau cone). Teknik ini digunakan saat lawan menghadang jalur passing lurus.',
-      'goals':'Melatih variasi operan dan mengasah kontrol arah operan.',
-    },
-    {
-      'title': 'Shooting form',
-      'image': 'assets/images/form.jpg',
-      'duration': '2 min',
-      'label': 'Control & Movement',
-      'level': 'Basic',
-      'category': 'Shooting',
-      'progress': 0.0,
-      'description': 'Latihan gerakan shooting tanpa bola. Fokus pada posisi jari, pergelangan, dan follow-through (gerakan lanjutan setelah bola dilepas). Penting untuk melatih memori otot sebelum menggunakan bola sungguhan.',
-      'goals':' Memperkuat teknik shooting dari segi gerakan tangan dan posisi tubuh.',
-    },
-    {
-      'title': 'Stretching ringan',
-      'image': 'assets/images/ches.jpg',
-      'duration': '2 min',
-      'label': 'Control & Movement',
-      'level': 'Basic',
-      'category': 'Pendinginan',
-      'progress': 0.0,
-      'description': 'Peregangan otot secara perlahan, mulai dari kaki, tangan, bahu, hingga punggung. Bisa dilakukan sambil duduk atau berdiri. Bernafas perlahan selama melakukan gerakan.',
-      'goals':'Mengurangi ketegangan otot, mempercepat pemulihan, dan mencegah nyeri otot setelah latihan.',
-    },
-
-    // ===== Intermediate =====
-    {
-      'title': 'Combo Dribble Cone',
-      'image': 'assets/images/combo.jpg',
-      'duration': '3 min',
-      'label': 'Footwork & Speed',
-      'level': 'Intermediate',
-      'category': 'Dribbling',
-      'progress': 0.0,
-      'description': 'Latihan menggiring bola di tempat dengan kombinasi gerakan: kanan–kiri–crossover–behind the back–between the legs (jika mampu). Dilakukan dengan durasi 30 detik per kombinasi lalu istirahat 15 detik. Fokus tetap pada kontrol dan posisi tubuh rendah',
-      'goals':'Meningkatkan kelincahan tangan dan variasi dribble.',
-    },
-    {
-      'title': 'Wall Passing',
-      'image': 'assets/images/wall.jpg',
-      'duration': '2 min',
-      'label': 'Accuracy',
-      'level': 'Intermediate',
-      'category': 'Passing',
-      'progress': 0.0,
-      'description': 'Gunakan dinding untuk melakukan chest pass dan bounce pass secara bergantian. Ulangi masing-masing 20–30 kali. Pastikan posisi tangan dan siku tepat, bola dilempar dan ditangkap kembali tanpa menjatuhkan.',
-      'goals':'Meningkatkan akurasi dan konsistensi operan.',
-    },
-    {
-      'title': 'Form Shooting',
-      'image': 'assets/images/formshot.jpg',
-      'duration': '2 min',
-      'label': 'Shooting Practice',
-      'level': 'Intermediate',
-      'category': 'Shooting',
-      'progress': 0.0,
-      'description': 'Lakukan tembakan jarak dekat (jika ada ring) atau gerakan shooting dengan bola ke arah dinding/target visual. Fokus pada follow-through, posisi tangan, dan keseimbangan. Bisa gunakan garis di dinding sebagai acuan arah.',
-      'goals':' Menstabilkan teknik tembakan',
-    },
-    {
-      'title': 'Shadow Defense',
-      'image': 'assets/images/shadow.jpg',
-      'duration': '3 min',
-      'label': 'Defense Skill',
-      'level': 'Intermediate',
-      'category': 'Kontrol & Posisi dasar',
-      'progress': 0.0,
-      'description': 'Lakukan gerakan defensive slide (langkah menyamping) dari satu sisi ke sisi lain selama 30 detik per sesi. Posisi tubuh tetap rendah, tangan terbuka, kaki aktif bergerak tanpa menyilang.',
-      'goals':'Menguatkan posisi bertahan,',
-    },
-  ];
-
+  RxList<Map<String, dynamic>> allTrainings = <Map<String, dynamic>>[].obs;
   RxList<Map<String, dynamic>> filteredTrainings = <Map<String, dynamic>>[].obs;
 
   @override
   void onInit() {
     super.onInit();
+    fetchData();
+    applyFilter();
 
-    // Ambil level dari arguments jika dikirimkan
     final argLevel = Get.arguments?['level'];
     if (argLevel != null && (argLevel == 'Basic' || argLevel == 'Intermediate')) {
       selectedLevel.value = argLevel;
     }
-
-    applyFilter();
   }
 
   void setLevel(String level) {
@@ -198,12 +38,166 @@ class LatihannController extends GetxController {
   void applyFilter() {
     final keyword = searchKeyword.value.toLowerCase();
 
-    filteredTrainings.value = basicLatihan.where((t) {
-      final title = (t['title'] as String).toLowerCase();
+    filteredTrainings.value = allTrainings.where((t) {
+      final title = (t['judul'] ?? '').toLowerCase();
       final matchKeyword = title.contains(keyword);
       final matchLevel = t['level'] == selectedLevel.value;
       final matchCategory = selectedCategory.value.isEmpty || t['category'] == selectedCategory.value;
       return matchKeyword && matchLevel && matchCategory;
     }).toList();
+  }
+
+  void fetchData() {
+    allTrainings.value = [
+      {
+        'id': '1',
+        'judul': 'Jumping Jack',
+        'level': 'Basic',
+        'image': 'assets/images/jumping.jpg',
+        'duration': '30 sec',
+        'category': 'Pemanasan',
+        'progress': 0.3,
+        'status': 'belum',
+      },
+      {
+        'id': '2',
+        'judul': 'Walking High Knees',
+        'level': 'Basic',
+        'image': 'assets/images/walking.jpg',
+        'duration': '30 sec',
+        'category': 'Pemanasan',
+        'progress': 0.1,
+        'status': 'belum',
+      },
+      {
+        'id': '3',
+        'judul': 'Knee Hugs',
+        'level': 'Basic',
+        'image': 'assets/images/kne.jpg',
+        'duration': '30 sec',
+        'category': 'Pemanasan',
+        'progress': 0.2,
+        'status': 'belum',
+      },
+      {
+        'id': '4',
+        'judul': 'Butt Kicks',
+        'level': 'Basic',
+        'image': 'assets/images/but.jpg',
+        'duration': '30 sec',
+        'category': 'Pemanasan',
+        'progress': 0.15,
+        'status': 'belum',
+      },
+      {
+        'id': '5',
+        'judul': 'Quad Walk',
+        'level': 'Basic',
+        'image': 'assets/images/quad.jpg',
+        'duration': '30 sec',
+        'category': 'Pemanasan',
+        'progress': 0.25,
+        'status': 'belum',
+      },
+      {
+        'id': '6',
+        'judul': 'Ankle Pops',
+        'level': 'Basic',
+        'image': 'assets/images/anqle.jpg',
+        'duration': '30 sec',
+        'category': 'Pemanasan',
+        'progress': 0.05,
+        'status': 'belum',
+      },
+      {
+        'id': '7',
+        'judul': 'Dribbling',
+        'level': 'Intermediate',
+        'image': 'assets/images/drible.jpg',
+        'duration': '40 sec',
+        'category': 'Teknik Dasar',
+        'progress': 0.0,
+        'status': 'belum',
+      },
+      {
+        'id': '8',
+        'judul': 'Chest Pass',
+        'level': 'Intermediate',
+        'image': 'assets/images/ches.jpg',
+        'duration': '30 sec',
+        'category': 'Teknik Dasar',
+        'progress': 0.0,
+        'status': 'belum',
+      },
+      {
+        'id': '9',
+        'judul': 'Bounce Pass',
+        'level': 'Intermediate',
+        'image': 'assets/images/bounce.jpg',
+        'duration': '30 sec',
+        'category': 'Teknik Dasar',
+        'progress': 0.0,
+        'status': 'belum',
+      },
+      {
+        'id': '10',
+        'judul': 'Passing',
+        'level': 'Intermediate',
+        'image': 'assets/images/passing.jpg',
+        'duration': '45 sec',
+        'category': 'Teknik Dasar',
+        'progress': 0.0,
+        'status': 'belum',
+      },
+      {
+        'id': '11',
+        'judul': 'Shooting',
+        'level': 'Intermediate',
+        'image': 'assets/images/shoting.jpg',
+        'duration': '45 sec',
+        'category': 'Teknik Dasar',
+        'progress': 0.0,
+        'status': 'belum',
+      },
+    ];
+  }
+
+  void tandaiSelesai(String judul) {
+    final index = allTrainings.indexWhere((e) => e['judul'] == judul);
+    if (index != -1) {
+      allTrainings[index]['status'] = 'selesai';
+      allTrainings.refresh();
+      applyFilter();
+    }
+  }
+
+  // 🔒 Fungsi untuk menentukan apakah sebuah latihan terkunci
+  bool isLocked(Map<String, dynamic> t) {
+    final id = int.tryParse(t['id'].toString()) ?? 0;
+    final level = t['level'];
+
+    // ===== BASIC =====
+    if (level == 'Basic') {
+      if (id == 1) return false; // Jumping Jack terbuka
+      final prevId = (id - 1).toString();
+      final prev = allTrainings.firstWhereOrNull((e) => e['id'] == prevId);
+      return prev == null || prev['status'] != 'selesai';
+    }
+
+    // ===== INTERMEDIATE =====
+    final anklePops = allTrainings.firstWhereOrNull((e) =>
+        e['judul'].toString().toLowerCase() == 'ankle pops' &&
+        e['level'] == 'Basic');
+    if (anklePops == null || anklePops['status'] != 'selesai') {
+      return true; // semua intermediate terkunci sampai ankle pops selesai
+    }
+
+    // Dribbling (id 7) terbuka setelah ankle pops selesai
+    if (id == 7) return false;
+
+    // Cek apakah latihan sebelumnya sudah selesai
+    final prevId = (id - 1).toString();
+    final prev = allTrainings.firstWhereOrNull((e) => e['id'] == prevId);
+    return prev == null || prev['status'] != 'selesai';
   }
 }
