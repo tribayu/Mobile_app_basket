@@ -1,12 +1,17 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:get_storage/get_storage.dart';
 
 class LoginnController extends GetxController {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
 
-  final box = GetStorage();
+  final String baseUrl = 'http://192.168.60.102:5000';
+  final String apiKey = 'api-key-1234';
+
+    final box = GetStorage();
 
   void login() async {
     final email = emailController.text.trim();
@@ -18,35 +23,53 @@ class LoginnController extends GetxController {
     }
 
     try {
-      // Simulasi pengecekan akun offline (contoh hardcoded)
-      if (email == 'admin@example.com' && password == 'admin123') {
-        // Simpan histori login
-        List<dynamic> history = box.read<List>('history') ?? [];
+      String basicAuth = 'Basic ${base64Encode(utf8.encode('$email:$password'))}';
 
-        final newEntry = {
-          'email': email,
-          'timestamp': DateTime.now().toIso8601String(),
-        };
 
-        history.add(newEntry);
-        box.write('history', history);
+      final response = await http.post(
+        Uri.parse('$baseUrl/login'),
+        headers: {
+          'Authorization': basicAuth,
+          'x-api-key': apiKey,
+        },
+      );
 
-        // Simpan user
-        box.write('user', {
-          'email': email,
-          'username': email.split('@')[0],
-          'password': password,
-        });
+      final data = jsonDecode(response.body);
 
-        Get.snackbar('Berhasil', 'Login offline berhasil');
-        Get.offAllNamed('/home');
+      if (response.statusCode == 200) {
+          List<dynamic> history = box.read<List>('history') ?? [];
+
+         final newEntry = {
+           'email': email,
+           'timestamp': DateTime.now().toIso8601String(),
+          };
+
+           history.add(newEntry);
+           box.write('history', history);
+
+          
+           box.write('user', {
+            'email': email,
+            'username': email.split('@')[0], // default username dari email
+            'password': password,
+          });
+           Get.snackbar('Berhasil', 'Login berhasil');
+           Get.offAllNamed('/home');
+      } else if (response.statusCode == 202) {
+        // Contoh backend mengirim status 202 jika butuh OTP verifikasi
+        goToOtp(email);
       } else {
-        Get.snackbar('Gagal', 'Email atau password salah');
+        Get.snackbar('Gagal', data['pesan'] ?? 'Login gagal');
       }
     } catch (e) {
-      print('ERROR Login Offline: $e');
-      Get.snackbar('Error', 'Terjadi kesalahan saat login offline');
+      print('ERROR Login: $e');
+      Get.snackbar('Error', 'Tidak dapat terhubung ke server');
     }
+  }
+
+  void goToOtp(String email) {
+    Get.toNamed('/otp', arguments: {'email': email});
+    Get.delete<LoginnController>(); // hapus controller agar tidak terjadi penggunaan controller setelah dispose
   }
 
   @override
